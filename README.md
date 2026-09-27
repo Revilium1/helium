@@ -48,8 +48,6 @@ The resulting executable will be located at:
 ./build/heli
 ```
 
-> **Note:** The project's `CMakeLists.txt` is currently located in the `src/` directory, which is why `./src` is passed as the CMake source directory.
-
 ## Usage
 
 Compile a Helium source file by passing it to the compiler:
@@ -90,7 +88,7 @@ The project is currently kept intentionally small:
 
 ```text
 .
-├── src/          # Helium compiler source code and CMakeLists.txt
+├── src/          # Helium compiler source code
 ├── example.he    # Example using the currently implemented features
 ├── run           # A simple shell script to automate building and running the compiler
 ├── CMakeLists.txt
