@@ -1,8 +1,13 @@
 #!/bin/bash
 rm ./out.asm ./out.o ./out
 cmake --build build
+echo
 read -rp "Enter input file name: " input_file
+echo
 output_file="${input_file%.he}"
 ./build/heli $input_file
 ./out
-echo $?
+output=$?
+echo
+echo "---- OUTPUT ----"
+echo $output

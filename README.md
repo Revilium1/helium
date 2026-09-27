@@ -38,7 +38,7 @@ Helium currently targets **x86-64 Linux** using the NASM `elf64` output format.
 Build the compiler with CMake:
 
 ```bash
-cmake -S ./src -B build
+cmake -S . -B build
 cmake --build build
 ```
 
