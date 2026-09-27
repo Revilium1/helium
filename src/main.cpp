@@ -4,7 +4,9 @@
 #include <sstream>
 #include <vector>
 
-enum class TokenType { _return, int_lit, semi };
+#include "./tokenization.hpp"
+
+enum class TokenType { exit, int_lit, semi };
 
 struct Token {
     TokenType type;
@@ -26,8 +28,8 @@ std::vector<Token> tokenize(const std::string& str)
                 i++;
             }
             i--;
-            if (buf == "return") {
-                tokens.push_back({ .type = TokenType::_return });
+            if (buf == "exit") {
+                tokens.push_back({ .type = TokenType::exit });
                 buf.clear();
                 continue;
             }
@@ -68,7 +70,7 @@ std::string tokens_to_asm(const std::vector<Token>& tokens)
     output << "global _start\n_start:\n";
     for (int i = 0; i < tokens.size(); i++) {
         const Token& token = tokens.at(i);
-        if (token.type == TokenType::_return) {
+        if (token.type == TokenType::exit) {
             if (i + 1 < tokens.size() && tokens.at(i + 1).type == TokenType::int_lit) {
                 if (i + 2 < tokens.size() && tokens.at(i + 2).type == TokenType::semi) {
                     output << "    mov rax, 60\n";

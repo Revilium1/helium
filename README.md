@@ -12,14 +12,14 @@ Currently implemented:
 
 - Statically typed syntax
 - Semicolon-terminated statements
-- `return` statements
+- `exit` statements
 - Compilation to x86-64 NASM assembly
 - Automatic assembly and linking with NASM and `ld`
 
 For example:
 
 ```he
-return 42;
+exit 42;
 ```
 
 ## Requirements
@@ -79,7 +79,7 @@ An example file, `example.he`, is included in the repository. It currently demon
 A minimal Helium program looks like:
 
 ```he
-return 42;
+exit 42;
 ```
 
 ## Project Structure
@@ -102,7 +102,7 @@ As the project grows, additional directories and components may be added.
 
 Helium is **experimental and under active development**.
 
-The language currently has very few features, with `return` being the only implemented language construct. The design and goals of the language are still evolving, so syntax and compiler behavior may change significantly.
+The language currently has very few features, with `exit` being the only implemented language construct. The design and goals of the language are still evolving, so syntax and compiler behavior may change significantly.
 
 ## License
 
