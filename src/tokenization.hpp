@@ -42,12 +42,13 @@ public:
             else if (std::isdigit(peek().value())) {
                 buf.push_back(consume());
                 while (peek().has_value() && std::isdigit(peek().value())) {
-                    tokens.push_back({ .type = TokenType::int_lit, .value = buf });
-                    buf.clear();
-                    continue;
+                    buf.push_back(consume());
                 }
+                tokens.push_back({ .type = TokenType::int_lit, .value = buf });
+                buf.clear();
+                continue;
             }
-            else if (peek().value() == ";") {
+            else if (peek().value() == ';') {
                 tokens.push_back({ .type = TokenType::semi });
                 consume();
                 continue;
@@ -80,4 +81,4 @@ private:
 
     const std::string m_src;
     int m_index = 0;
-}
+};
