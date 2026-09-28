@@ -1,1 +1,4 @@
-exit 0;
+let apple = 3;
+let banana = 2;
+let carrot = apple;
+exit(carrot);
