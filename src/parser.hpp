@@ -45,7 +45,7 @@ public:
         if (peek().has_value() && peek().value().type == TokenType::int_lit) {
             return NodeExpr { .var = NodeExprIntLit { .int_lit = consume() } };
         }
-        else if (peek().has_value() && peek().value().type == TokenType::ident) {
+        if (peek().has_value() && peek().value().type == TokenType::ident) {
             return NodeExpr { .var = NodeExprIdent { .ident = consume() } };
         }
         else {
@@ -53,10 +53,10 @@ public:
         }
     }
 
-    std::optional<NodeStmt> parse_stmt()
-    {
-        if (peek().value().type == TokenType::exit && peek(1).has_value()
-            && peek(1).value().type == TokenType::open_paren) {
+    std::optional<NodeStmt> parse_stmt() {
+        if (peek().has_value() && peek().value().type == TokenType::exit && peek(1).has_value() 
+            && peek(1).value().type == TokenType::open_paren) 
+        {
             consume();
             consume();
             NodeStmtExit stmt_exit;
@@ -71,29 +71,27 @@ public:
                 consume();
             }
             else {
-                std::cerr << "Expected `)`" << std::endl;
+                std::cerr << "Expected ')' but it was missing" << std::endl;
                 exit(EXIT_FAILURE);
             }
             if (peek().has_value() && peek().value().type == TokenType::semi) {
                 consume();
             }
             else {
-                std::cerr << "Expected `;`" << std::endl;
+                std::cerr << "Expected ';' but it was missing" << std::endl;
                 exit(EXIT_FAILURE);
             }
-            return NodeStmt { .var = stmt_exit };
-        }
-        else if (
-            peek().has_value() && peek().value().type == TokenType::let && peek(1).has_value()
-            && peek(1).value().type == TokenType::ident && peek(2).has_value()
-            && peek(2).value().type == TokenType::eq) {
+            return NodeStmt{ .var = stmt_exit};
+        } else if (peek().has_value() && peek().value().type == TokenType::let && peek(1).has_value() 
+            && peek(1).value().type == TokenType::ident && peek(2).has_value() 
+            && peek(2).value().type == TokenType::eq) 
+        {
             consume();
             auto stmt_let = NodeStmtLet { .ident = consume() };
             consume();
             if (auto expr = parse_expr()) {
                 stmt_let.expr = expr.value();
-            }
-            else {
+            } else {
                 std::cerr << "Invalid expression" << std::endl;
                 exit(EXIT_FAILURE);
             }
@@ -101,12 +99,11 @@ public:
                 consume();
             }
             else {
-                std::cerr << "Expected `;`" << std::endl;
+                std::cerr << "Expected ';' but it was missing" << std::endl;
                 exit(EXIT_FAILURE);
             }
-            return NodeStmt { .var = stmt_let };
-        }
-        else {
+            return NodeStmt{ .var = stmt_let };
+        } else {
             return {};
         }
     }
@@ -114,7 +111,7 @@ public:
     std::optional<NodeProg> parse_prog()
     {
         NodeProg prog;
-        while (peek().has_value()) {
+        while(peek().has_value()) {
             if (auto stmt = parse_stmt()) {
                 prog.stmts.push_back(stmt.value());
             }
