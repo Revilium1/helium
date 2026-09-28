@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
     if(!tree.has_value()) {
         std::cerr << "No exit statement found" << std::endl;
-        exit(EXIT_FAILURE)
+        exit(EXIT_FAILURE);
     }
 
     Generator generator(tree.value());
