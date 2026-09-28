@@ -4,13 +4,15 @@
 #include <sstream>
 #include <vector>
 
+#include "./tokenization.hpp"
+#include "./parser.hpp"
 #include "./generation.hpp"
 
 int main(int argc, char* argv[])
 {
     if (argc != 2) {
         std::cerr << "Incorrect usage. Correct usage is..." << std::endl;
-        std::cerr << "hydro <input.hy>" << std::endl;
+        std::cerr << "heli <input.he>" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -24,12 +26,12 @@ int main(int argc, char* argv[])
 
     Tokenizer tokenizer(std::move(contents));
     std::vector<Token> tokens = tokenizer.tokenize();
-
+    
     Parser parser(std::move(tokens));
     std::optional<NodeProg> prog = parser.parse_prog();
 
-    if (!prog.has_value()) {
-        std::cerr << "Invalid program" << std::endl;
+    if(!prog.has_value()) {
+        std::cerr << "Genuinely no idea what went wrong" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -39,8 +41,11 @@ int main(int argc, char* argv[])
         file << generator.gen_prog();
     }
 
+    std::cout << "Assembling..." << std::endl;
     system("nasm -felf64 out.asm");
+    std::cout << "Linking..." << std::endl;
     system("ld -o out out.o");
+    std::cout << "Success! Outputted to ./out" << std::endl;
 
     return EXIT_SUCCESS;
 }
