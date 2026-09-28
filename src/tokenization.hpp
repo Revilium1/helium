@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-enum class TokenType { exit, int_lit, semi };
+enum class TokenType { exit, int_lit, semi, open_paren, close_paren, ident, let, eq};
 
 struct Token {
     TokenType type;
@@ -34,6 +34,11 @@ public:
                     buf.clear();
                     continue;
                 }
+                else if (buf == "let") {
+                    tokens.push_back({ .type = TokenType::let });
+                    buf.clear();
+                    continue;
+                }
                 else {
                     std::cerr << "You messed up!" << std::endl;
                     exit(EXIT_FAILURE);
@@ -48,6 +53,21 @@ public:
                 buf.clear();
                 continue;
             }
+            else if (peek().value() == '(') {
+                tokens.push_back({ .type = TokenType::open_paren });
+                consume();
+                continue;
+            }
+            else if (peek().value() == ')') {
+                tokens.push_back({ .type = TokenType::close_paren });
+                consume();
+                continue;
+            }
+            else if (peek().value() == '=') {
+                tokens.push_back({ .type = TokenType::eq });
+                consume();
+                continue;
+            }
             else if (peek().value() == ';') {
                 tokens.push_back({ .type = TokenType::semi });
                 consume();
@@ -58,8 +78,10 @@ public:
                 continue;
             }
             else {
-                std::cerr << "You messed up!" << std::endl;
-                exit(EXIT_FAILURE);
+                tokens.push_back({ .type = TokenType::ident, .value = buf });
+                buf.clear();
+                consume();
+                continue;
             }
         }
         m_index = 0;
