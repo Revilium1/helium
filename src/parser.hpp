@@ -56,7 +56,7 @@ public:
 private:
     [[nodiscard]] inline std::optional<Token> peek(int offset = 0) const
     {
-        if (m_index + ahead > m_tokens.size()) {
+        if (m_index + offset >= m_tokens.size()) {
             return {};
         }
         else {
