@@ -1,3 +1,4 @@
+```math
 $$
 \begin{align}
     [\text {prog}] &\to [\text {stat}]^* \\
@@ -13,3 +14,4 @@ $$
     \end{cases}
 \end{align}
 $$
+```
