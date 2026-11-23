@@ -1,6 +1,11 @@
 #pragma once
 
+#include <cstdlib>
+#include <iostream>
+#include <optional>
+#include <string>
 #include <variant>
+#include <vector>
 
 #include "arena.hpp"
 #include "tokenization.hpp"
@@ -14,11 +19,6 @@ struct NodeTermIdent {
 };
 
 struct NodeExpr;
-
-// struct NodeBinExprMult {
-//     NodeExpr* lhs;
-//     NodeExpr* rhs;
-// };
 
 struct NodeBinExprAdd {
     NodeExpr* lhs;
@@ -62,7 +62,8 @@ public:
     {
     }
 
-    std::optional<NodeTerm*> parse_expr() {
+    std::optional<NodeTerm*> parse_term()
+    {
         if (auto int_lit = try_consume(TokenType::int_lit)) {
             auto term_int_lit = m_allocator.alloc<NodeTermIntLit>();
             term_int_lit->int_lit = int_lit.value();
@@ -76,9 +77,8 @@ public:
             auto term = m_allocator.alloc<NodeTerm>();
             term->var = term_ident;
             return term;
-        } else {
-            return {};
         }
+        return {};
     }
 
     std::optional<NodeExpr*> parse_expr()
@@ -90,27 +90,18 @@ public:
                 auto lhs_expr = m_allocator.alloc<NodeExpr>();
                 lhs_expr->var = term.value();
                 bin_expr_add->lhs = lhs_expr;
-                consume();
                 if (auto rhs = parse_expr()) {
                     bin_expr_add->rhs = rhs.value();
                     bin_expr->add = bin_expr_add;
                     auto expr = m_allocator.alloc<NodeExpr>();
                     expr->var = bin_expr;
                     return expr;
-                } else {
-                    std::cerr << "Expected expression" << std::endl;
-                    exit(EXIT_FAILURE);
                 }
-            try_consume(TokenType::semi, "Expected ';'");
+                std::cerr << "Expected expression" << std::endl;
+                exit(EXIT_FAILURE);
+            }
             auto expr = m_allocator.alloc<NodeExpr>();
             expr->var = term.value();
-            return expr;
-        } else {
-            return {};
-        }
-        else if (auto bin_expr = parse_bin_expr()){
-            auto expr = m_allocator.alloc<NodeExpr>();
-            expr->var = bin_expr.value()
             return expr;
         }
         return {};
@@ -152,7 +143,7 @@ public:
                 std::cerr << "Invalid expression" << std::endl;
                 exit(EXIT_FAILURE);
             }
-
+            try_consume(TokenType::semi, "Expected ';'");
             auto stmt = m_allocator.alloc<NodeStmt>();
             stmt->var = stmt_let;
             return stmt;
@@ -176,7 +167,7 @@ public:
     }
 
 private:
-    [[nodiscard]] inline std::optional<Token> peek(int offset = 0) const
+    [[nodiscard]] inline std::optional<Token> peek(size_t offset = 0) const
     {
         if (m_index + offset >= m_tokens.size()) {
             return {};
@@ -189,23 +180,23 @@ private:
         return m_tokens.at(m_index++);
     }
 
-    inline Token try_consume(TokenType type, const std::string& err_msg) {
+    // Required token: errors out if it isn't there
+    inline Token try_consume(TokenType type, const std::string& err_msg)
+    {
         if (peek().has_value() && peek().value().type == type) {
             return consume();
         }
-        else {
-            std::cerr << err_msg << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        std::cerr << err_msg << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-    inline std::optional<Token> try_consume(TokenType type, const std::string& err_msg) {
+    // Optional token: returns nullopt if it isn't there
+    inline std::optional<Token> try_consume(TokenType type)
+    {
         if (peek().has_value() && peek().value().type == type) {
             return consume();
         }
-        else {
-            return {};
-        }
+        return {};
     }
 
     const std::vector<Token> m_tokens;
