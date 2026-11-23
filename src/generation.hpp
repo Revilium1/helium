@@ -29,7 +29,7 @@ public:
                 offset << "QWORD [rsp + " << (gen->m_stack_size - var.stack_loc - 1) * 8 << "]";
                 gen->push(offset.str());
             }
-        }
+        };
         TermVisitor visitor({.gen = this});
         std::visit(visitor, term->var);
     }
@@ -47,8 +47,8 @@ public:
                 gen->gen_expr(bin_expr->add->rhs);
                 gen->pop("rax");
                 gen->pop("rbx");
-                gen->m_output << "    add rax, rbx\n"
-                gen->push("rax")
+                gen->m_output << "    add rax, rbx\n";
+                gen->push("rax");
             }
         };
 
