@@ -27,4 +27,4 @@ private:
     size_t m_size;
     std::byte* m_buffer;
     std::byte* m_offset;
-}
+};
