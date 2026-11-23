@@ -1,7 +1,6 @@
 name: Build and Test Helium
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       test_file:
@@ -48,3 +47,4 @@ jobs:
             out.asm
             out.o
             out
+            build/heli
