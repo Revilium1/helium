@@ -1,0 +1,50 @@
+name: Build and Test Helium
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      test_file:
+        description: 'Helium (.he) file to compile and run'
+        required: true
+        default: 'example.he'
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install NASM
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nasm
+
+      - name: Configure CMake
+        run: cmake -S . -B build
+
+      - name: Run ./run script
+        run: |
+          chmod +x ./run
+          FILE="${{ github.event.inputs.test_file || 'example.he' }}"
+          echo "$FILE" | ./run
+
+      - name: Inspect Generated Assembly
+        if: always()
+        run: |
+          if [ -f ./out.asm ]; then
+            echo "=== out.asm ==="
+            cat ./out.asm
+          fi
+
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: helium-build-artifacts
+          path: |
+            out.asm
+            out.o
+            out
