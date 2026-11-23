@@ -10,7 +10,7 @@
     \begin{cases}
         \text{int\_lit} \\
         \text{ident} \\
-        [\text{BinExpr}]
+        [\text{NodeBinExpr}]
     \end{cases} \\
     [\text{BinExpr}] &\to
     \begin{cases}
