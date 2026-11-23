@@ -58,14 +58,6 @@ public:
     {
     }
 
-    std::optional<NodeBinExpr*> parse_bin_expr()
-    {
-        if (auto lhs = parse_expr()) {
-            auto bin_expr = m_allocator.alloc<NodeBinExpr>();
-            if 
-        } else {return {};}
-    }
-
     std::optional<NodeExpr*> parse_expr()
     {
         if (peek().has_value() && peek().value().type == TokenType::int_lit) {
@@ -80,11 +72,6 @@ public:
             expr_ident->ident = consume();
             auto expr = m_allocator.alloc<NodeExpr>();
             expr->var = expr_ident;
-            return expr;
-        }
-        else if (auto bin_expr = parse_bin_expr()){
-            auto expr = m_allocator.alloc<NodeExpr>();
-            expr->var = bin_expr.value()
             return expr;
         }
         return {};
