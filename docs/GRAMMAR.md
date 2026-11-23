@@ -1,5 +1,4 @@
 ```math
-$$
 \begin{align}
     [\text {prog}] &\to [\text {stat}]^* \\
     [\text {stat}] &\to 
@@ -13,5 +12,4 @@ $$
         \text{ident}
     \end{cases}
 \end{align}
-$$
 ```
